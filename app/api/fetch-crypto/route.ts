@@ -1,22 +1,27 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
+import { Coin } from "@/app/types/crypto";
 
-interface Coin {
-  id: string;
-  symbol: string;
-  name: string;
-  current_price: number;
-  market_cap: number;
-  last_updated: string;
-}
-// GIA TWRA TO EXW MANUAL FETCH
+// GIA TWRA TO EXW MANUAL FETCH 100TOP CRYPTO COINS
 export async function GET() {
   const client = await clientPromise;
   const db = client.db("ai_finance");
 
+  const apiKey = process.env.COINGECKO_DEMO_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: "Missing API key" }, { status: 500 });
+  }
+
   //fetch top 100 crypto coins
   const res = await fetch(
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1"
+    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1",
+    {
+      headers: {
+        "x-cg-demo-api-key": apiKey,
+        Accept: "application/json",
+      },
+      next: { revalidate: false },
+    }
   );
   const data = await res.json();
 
