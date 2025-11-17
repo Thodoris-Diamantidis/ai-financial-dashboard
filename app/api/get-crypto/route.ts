@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/app/lib/mongodb"; //mongo client
-import { Coin } from "@/app/types/crypto";
+import clientPromise from "@/lib/mongodb"; //mongo client
+import { Coin } from "@/types/crypto";
 
 export async function GET() {
   const client = await clientPromise;

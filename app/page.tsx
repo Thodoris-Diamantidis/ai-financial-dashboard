@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Coin } from "./types/crypto";
+import { Coin } from "../types/crypto";
 
 export default function Home() {
   const [coins, setCoins] = useState<Coin[]>([]);

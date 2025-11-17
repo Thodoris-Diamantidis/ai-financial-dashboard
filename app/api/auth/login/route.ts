@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/app/lib/mongodb";
+import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import jwt, { SignOptions, Secret } from "jsonwebtoken";
 import { serialize } from "cookie";

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/app/lib/mongodb";
-import { Coin } from "@/app/types/crypto";
+import clientPromise from "@/lib/mongodb";
+import { Coin } from "@/types/crypto";
 
 // GIA TWRA TO EXW MANUAL FETCH 100TOP CRYPTO COINS
 export async function GET() {

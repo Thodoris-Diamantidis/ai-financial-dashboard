@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { useUser } from "@/app/lib/UserContext";
+import { useUser } from "@/lib/UserContext";
 
 export default function Navbar() {
   const router = useRouter();

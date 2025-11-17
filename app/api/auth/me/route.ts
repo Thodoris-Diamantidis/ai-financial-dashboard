@@ -1,6 +1,6 @@
 // app/api/auth/me/route.ts
 import { NextResponse } from "next/server";
-import { getTokenFromReq, verifyToken } from "@/app/lib/auth";
+import { getTokenFromReq, verifyToken } from "@/lib/auth";
 
 export async function GET(req: Request) {
   const token = getTokenFromReq(req as any); // Read cookie
