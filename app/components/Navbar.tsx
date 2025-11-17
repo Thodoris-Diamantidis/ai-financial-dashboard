@@ -1,5 +1,7 @@
 "use client";
 
+import { ThemeToggle } from "./ThemeToggle.";
+
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
@@ -56,6 +58,10 @@ export default function Navbar() {
         onClick={() => router.push("/")}
       >
         AI-Powered Financial Dashboard
+        <span>
+          {" "}
+          <ThemeToggle />{" "}
+        </span>
       </div>
 
       {/* Right: User actions */}
