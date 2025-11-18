@@ -7,30 +7,6 @@
 
 /* Dark mode */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--background);
-  font-family: system-ui, sans-serif;
-}
-
-a {
-  color: #2563eb; /* blue-600 */
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
