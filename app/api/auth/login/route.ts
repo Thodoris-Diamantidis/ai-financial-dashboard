@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt, { SignOptions, Secret } from "jsonwebtoken";
 import { serialize } from "cookie";
 
-//helper function epeidh me ebgaze oti to jwt secret mporei na einnai
+//helper function epeidh me ebgaze oti to jwt secret mporei na einnai null
 function getRequiredEnv(name: string): string {
   const v = process.env[name];
   if (!v) {

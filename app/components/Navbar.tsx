@@ -3,7 +3,7 @@
 import { ThemeToggle } from "./ThemeToggle.";
 
 import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/UserContext";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -11,9 +11,7 @@ import UserMenu from "./UserMenu";
 
 export default function Navbar() {
   const router = useRouter();
-  const pathname = usePathname(); // Track current route
   const { user, setUser } = useUser();
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Fetch user if not already in context
@@ -40,11 +38,6 @@ export default function Navbar() {
     }
   }, [user, setUser]);
 
-  // Close dropdown whenever route changes
-  // useEffect(() => {
-  //   setOpen(false);
-  // }, [pathname]);
-
   // Logout handler
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -58,20 +51,19 @@ export default function Navbar() {
       <h1 className="hover:cursor-pointer" onClick={() => router.push("/")}>
         Powered Financial Dashboard
       </h1>
-      <div className="flex items-center justify-between gap-4 w-[30%]">
+      <div className="flex items-center gap-4">
         {!loading && (
-          <div className="flex items-center w-full gap-4">
-            <div className="flex items-center gap-4">
-              <div className="relative grow">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-primary" />
-                <Input
-                  type="search"
-                  placeholder="Search a stock/coin..."
-                  className="pl-8 border-none shadow-none w-full"
-                />
-              </div>
-              <ThemeToggle />
+          <div className="flex items-center gap-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-primary" />
+              <Input
+                type="search"
+                placeholder="Search a stock/coin..."
+                className=" pl-8 border-none shadow-none w-32 sm:w-48 md:w-64 lg:w-72"
+              />
             </div>
+            <ThemeToggle />
 
             {/* Spacer pushes UserMenu to the right */}
             <div className="ml-auto">
