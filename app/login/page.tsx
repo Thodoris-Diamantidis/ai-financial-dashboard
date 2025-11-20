@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -53,7 +54,9 @@ export default function LoginPage() {
             Enter your email below to login to your account
           </CardDescription>
           <CardAction>
-            <Button variant="link">Sign Up</Button>
+            <Button variant="link" asChild>
+              <Link href="/register">Sign Up</Link>
+            </Button>
           </CardAction>
         </CardHeader>
         <form onSubmit={handleLogin}>
