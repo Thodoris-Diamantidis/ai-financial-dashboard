@@ -2,7 +2,6 @@
 
 import { ThemeToggle } from "./ThemeToggle.";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/UserContext";
 import { Search } from "lucide-react";
@@ -11,32 +10,7 @@ import UserMenu from "./UserMenu";
 
 export default function Navbar() {
   const router = useRouter();
-  const { user, setUser } = useUser();
-  const [loading, setLoading] = useState(true);
-
-  // Fetch user if not already in context
-  useEffect(() => {
-    if (!user) {
-      async function fetchUser() {
-        try {
-          const res = await fetch("/api/auth/me", { credentials: "include" });
-          if (res.ok) {
-            const data = await res.json();
-            setUser(data.user);
-          } else {
-            setUser(null);
-          }
-        } catch {
-          setUser(null);
-        } finally {
-          setLoading(false);
-        }
-      }
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, [user, setUser]);
+  const { user, loading, setUser } = useUser();
 
   // Logout handler
   async function handleLogout() {
