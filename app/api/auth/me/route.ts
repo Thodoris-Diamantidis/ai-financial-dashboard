@@ -14,6 +14,10 @@ export async function GET(req: Request) {
     user: {
       userId: decoded.userId,
       email: decoded.email,
+      name: decoded.name,
+      role: decoded.role,
+      avatar: decoded.avatar,
+      subscription: decoded.subscription,
     },
   });
 }

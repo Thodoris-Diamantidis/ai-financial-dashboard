@@ -45,7 +45,14 @@ export async function POST(req: Request) {
 
     //create JWT token
     const token = jwt.sign(
-      { userId: user._id.toString(), email: user.email },
+      {
+        userId: user._id.toString(),
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        avatar: user.avatar,
+        subscription: user.subscription,
+      },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -61,7 +68,17 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(
-      { success: true, user: { email: user.email, name: user.name } },
+      {
+        success: true,
+        user: {
+          userId: user._id.toString(),
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          avatar: user.avatar,
+          subscription: user.subscription,
+        },
+      },
       { status: 200, headers: { "Set-Cookie": cookie } }
     );
   } catch (err) {
