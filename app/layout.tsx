@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { UserProvider } from "../lib/UserContext";
 import { ThemeProvider } from "./components/theme-provider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,17 +27,21 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased bg-slate-200 dark:bg-black`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
-          <UserProvider>
-            <Navbar />
-            <main>{children}</main>
-          </UserProvider>
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <UserProvider>
+              <Navbar />
+              <main>{children}</main>
+            </UserProvider>
+          </ThemeProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

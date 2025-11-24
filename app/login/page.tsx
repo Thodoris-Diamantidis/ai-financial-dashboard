@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -98,9 +99,24 @@ export default function LoginPage() {
             <Button type="submit" className="w-full">
               Login
             </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
-            </Button>
+            <GoogleLogin
+              onSuccess={async (res) => {
+                const tokenId = res.credential; // Google JWT
+                const r = await fetch("/api/auth/google", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ tokenId }),
+                });
+                const data = await r.json();
+                if (r.ok) {
+                  setUser(data.user);
+                  router.push("/");
+                } else {
+                  console.error(data.error);
+                }
+              }}
+              onError={() => console.log("Google login failed")}
+            />
           </CardFooter>
         </form>
       </Card>
