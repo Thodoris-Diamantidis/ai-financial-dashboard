@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Coin } from "../types/crypto";
 import { useTheme } from "next-themes";
+import PriceCards from "./components/Price-Cards";
 
 export default function Home() {
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -27,6 +28,11 @@ export default function Home() {
 
   return (
     <div className={`p-2 min-h-screen`}>
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1.1fr] mt-4">
+        <div className="w-full">
+          <PriceCards />
+        </div>
+      </div>
       <h1 className="text-2xl font-bold mb-4">Top 100 Crypto Coins</h1>
       <table className="min-w-full border">
         <thead>

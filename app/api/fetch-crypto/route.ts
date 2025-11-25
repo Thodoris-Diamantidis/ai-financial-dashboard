@@ -20,7 +20,6 @@ export async function GET() {
         "x-cg-demo-api-key": apiKey,
         Accept: "application/json",
       },
-      next: { revalidate: false },
     }
   );
   const data = await res.json();
@@ -30,7 +29,9 @@ export async function GET() {
     id: coin.id,
     symbol: coin.symbol,
     name: coin.name,
+    image: coin.image,
     current_price: coin.current_price,
+    change: coin.price_change_percentage_24h,
     market_cap: coin.market_cap,
     last_updated: coin.last_updated,
   }));
