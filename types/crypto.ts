@@ -18,3 +18,24 @@ export interface PriceCardsData {
   changeDirection: string;
   image: string;
 }
+
+export interface CryptoComboBox {
+  value: string;
+  label: string;
+  icon: string;
+  price: string;
+  change: string;
+}
+
+export interface CoinComboboxProp {
+  coins: CryptoComboBox[] | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface chartData {
+  date: string;
+  price: Number;
+}
