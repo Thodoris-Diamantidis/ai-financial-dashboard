@@ -11,6 +11,10 @@ import {
 interface User {
   userId: string;
   email: string;
+  name: string;
+  avatar?: string;
+  role?: string;
+  subscription?: string;
 }
 
 interface UserContextType {

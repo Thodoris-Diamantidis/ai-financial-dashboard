@@ -47,11 +47,12 @@ export default function UserMenu({ user, onLogout }: Props) {
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/profile")}>
+            Profile
+          </DropdownMenuItem>
           <DropdownMenuItem>Manage Favorites</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
-
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={onLogout}>Log out</DropdownMenuItem>

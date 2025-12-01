@@ -76,9 +76,11 @@ export function CryptoChart() {
                 icon: crypto.image as string,
                 price: String(crypto.current_price),
                 change:
-                  (crypto.change as number).toFixed(4)[0] !== "-"
-                    ? `+${(crypto.change as number).toFixed(4)}`
-                    : (crypto.change as number).toFixed(4),
+                  crypto.change != null
+                    ? (crypto.change as number).toFixed(4)[0] !== "-"
+                      ? `+${(crypto.change as number).toFixed(4)}`
+                      : (crypto.change as number).toFixed(4)
+                    : "0.0000",
               };
             } else {
               return null; //return null from invalid entries
