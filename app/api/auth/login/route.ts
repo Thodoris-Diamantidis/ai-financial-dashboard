@@ -52,6 +52,7 @@ export async function POST(req: Request) {
         role: user.role,
         avatar: user.avatar,
         subscription: user.subscription,
+        createdAt: user.createdAt,
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
@@ -77,6 +78,7 @@ export async function POST(req: Request) {
           role: user.role,
           avatar: user.avatar,
           subscription: user.subscription,
+          createdAt: user.createdAt,
         },
       },
       { status: 200, headers: { "Set-Cookie": cookie } }

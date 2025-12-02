@@ -2,6 +2,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/lib/UserContext";
 import { DrawerDialog } from "../components/DrawerDialog";
+import { Check } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -47,8 +49,43 @@ export default function Profile() {
         </div>
       </div>
 
-      <div>
-        <h2 className="text-2xl">Favorite Cryptocurrencies</h2>
+      <div
+        className="grid  grid-cols-1 
+                  md:grid-cols-[35vw_35vw] 
+                  lg:grid-cols-[30vw_30vw]  mt-5 gap-7"
+      >
+        {/* Account Overview Section */}
+        <Card className="p-5 rounded-lg ">
+          <h2 className="text-2xl font-bold">Account Overview</h2>
+          <div className="flex justify-between mt-3">
+            <div>Member Since</div>
+            <div>
+              {user.createdAt
+                ? new Date(user.createdAt).toLocaleDateString()
+                : "N/A"}
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div>Subscription</div>
+            <div>{user.subscription?.toUpperCase()}</div>
+          </div>
+          <div className="flex justify-between ">
+            <div>Last Login</div>
+            <div className="text-red-400">Not Available</div>
+          </div>
+          <div className="flex justify-between ">
+            <div>Security Status</div>
+            <div className="flex items-center ">
+              <Check size={16} className="text-green-500" />
+              <span>All good</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Subscription Section */}
+        <Card className="p-5 rounded-lg ">
+          <h2 className="text-2xl font-bold">Subscription</h2>
+        </Card>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ interface User {
   avatar?: string;
   role?: string;
   subscription?: string;
+  createdAt?: Date;
 }
 
 interface UserContextType {

@@ -18,6 +18,7 @@ export async function GET(req: Request) {
       role: decoded.role,
       avatar: decoded.avatar,
       subscription: decoded.subscription,
+      createdAt: decoded.createdAt,
     },
   });
 }
