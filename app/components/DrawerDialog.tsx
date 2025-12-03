@@ -39,7 +39,7 @@ export function DrawerDialog({
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="text-blue-500" variant="link">
+          <Button className="text-primary" variant="link">
             Edit profile
           </Button>
         </DialogTrigger>
@@ -60,7 +60,7 @@ export function DrawerDialog({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="text-blue-500" variant="link">
+        <Button className="text-primary" variant="link">
           Edit profile
         </Button>
       </DrawerTrigger>

@@ -4,6 +4,7 @@ import { useUser } from "@/lib/UserContext";
 import { DrawerDialog } from "../components/DrawerDialog";
 import { Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -58,23 +59,23 @@ export default function Profile() {
         <Card className="p-5 rounded-lg ">
           <h2 className="text-2xl font-bold">Account Overview</h2>
           <div className="flex justify-between mt-3">
-            <div>Member Since</div>
-            <div>
+            <span>Member Since</span>
+            <span>
               {user.createdAt
                 ? new Date(user.createdAt).toLocaleDateString()
                 : "N/A"}
-            </div>
+            </span>
           </div>
           <div className="flex justify-between">
-            <div>Subscription</div>
-            <div>{user.subscription?.toUpperCase()}</div>
+            <span>Subscription</span>
+            <span>{user.subscription?.toUpperCase()}</span>
           </div>
           <div className="flex justify-between ">
-            <div>Last Login</div>
-            <div className="text-red-400">Not Available</div>
+            <span>Last Login</span>
+            <span className="text-red-400">Not Available</span>
           </div>
           <div className="flex justify-between ">
-            <div>Security Status</div>
+            <span>Security Status</span>
             <div className="flex items-center ">
               <Check size={16} className="text-green-500" />
               <span>All good</span>
@@ -85,7 +86,35 @@ export default function Profile() {
         {/* Subscription Section */}
         <Card className="p-5 rounded-lg ">
           <h2 className="text-2xl font-bold">Subscription</h2>
+          <div className="flex flex-col">
+            <h3 className="text-xl">Pro</h3>
+            <span className="font-bold mb-3">$x.xx/month</span>
+            <ul className="list-disc ml-4">
+              <li>Unlimited access</li>
+              <li>No ads</li>
+              <li>Priority support</li>
+            </ul>
+            <Button className="mt-4 cursor-pointer">Upgrade to Pro</Button>
+          </div>
         </Card>
+
+        {/* Security & Privacy Section */}
+        <Card className="p-5 rounded-lg">
+          <h2 className="text-2xl font-bold">Security & Privacy</h2>
+          <div className="flex justify-between">
+            <span>Change Password</span>
+            <span>{">"}</span>
+          </div>
+          <span>2-Factor Authentication</span>
+        </Card>
+
+        <div className="relative">
+          <div className="absolute inset-0 bg-red-600 rounded-lg blur"></div>
+          <Card className="relative p-5 rounded-lg h-full">
+            <h2 className="text-2xl font-bold">Danger Zone</h2>
+            <Button className="cursor-pointer">Delete account</Button>
+          </Card>
+        </div>
       </div>
     </div>
   );
