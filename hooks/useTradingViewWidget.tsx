@@ -11,7 +11,7 @@ const useTradingViewWidget = (
   useEffect(() => {
     if (!containerRef.current) return;
     if (containerRef.current.dataset.loaded) return;
-    containerRef.current.innerHTML = `<div class="tradingview-widget-container__widget" style="width:100%; height: ${height}px;"></div>`;
+    containerRef.current.innerHTML = `<div class="tradingview-widget-container__widget" style="width: 100%; height: ${height}px;"></div>`;
 
     const script = document.createElement("script");
     script.src = scriptUrl;
@@ -31,5 +31,4 @@ const useTradingViewWidget = (
 
   return containerRef;
 };
-
 export default useTradingViewWidget;

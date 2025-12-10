@@ -4,8 +4,6 @@ import { ThemeToggle } from "./ThemeToggle.";
 
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/UserContext";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import UserMenu from "./UserMenu";
 import SearchCommand from "./SearchCommand";
 import { StockWithWatchlistStatus } from "@/types/crypto";

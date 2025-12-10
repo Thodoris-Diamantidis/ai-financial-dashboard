@@ -70,3 +70,9 @@ export interface FinnhubSearchResponse {
   count: number;
   result: FinnhubSearchResult[];
 }
+
+export interface StockDetailsPageProps {
+  params: Promise<{
+    symbol: string;
+  }>;
+}
