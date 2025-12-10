@@ -1,0 +1,56 @@
+// TradingViewWidget.jsx
+import useTradingViewWidget from "@/hooks/useTradingViewWidget";
+import { memo } from "react";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
+
+interface TradingViewWidgetProps {
+  title?: string;
+  scriptUrl: string;
+  config: Record<string, unknown>;
+  height?: number;
+  className?: string;
+}
+
+const TradingViewWidget = ({
+  title,
+  scriptUrl,
+  config,
+  height = 600,
+  className,
+}: TradingViewWidgetProps) => {
+  const { theme } = useTheme();
+
+  const themedConfig = {
+    ...config,
+    colorTheme: theme === "light" ? "light" : "dark",
+    isTransparent: false, // force it to use your color
+  };
+  const containerRef = useTradingViewWidget(scriptUrl, themedConfig, height);
+  return (
+    <div className="w-full">
+      {title && <h3 className="font-semibold text-2xl mb-5">{title}</h3>}
+      <div
+        className={cn("tradingview-widget-container ", className)}
+        ref={containerRef}
+      >
+        <div
+          className="tradingview-widget-container__widget"
+          style={{ height, width: "100%" }}
+        />
+        <div className="tradingview-widget-copyright">
+          <a
+            href="https://www.tradingview.com/symbols/NASDAsQ-AAPL/"
+            rel="noopener nofollow"
+            target="_blank"
+          >
+            <span className="blue-text">AAPL stock chart</span>
+          </a>
+          <span className="trademark "> by TradingView</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default memo(TradingViewWidget);

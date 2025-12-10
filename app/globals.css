@@ -114,6 +114,18 @@
   --sidebar-ring: oklch(0.408 0.123 38.172);
 }
 
+/* TradingView Advanced Chart Widget Styles */
+.tradingview-widget-container {
+  padding: 10px;
+  background-color: var(--card) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+.tradingview-widget-container__widget {
+  background-color: var(--card) !important;
+  height: 100% !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

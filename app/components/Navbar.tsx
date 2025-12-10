@@ -22,7 +22,7 @@ export default function Navbar() {
   return (
     <nav
       className="flex h-[73px] items-center justify-between px-6
-  backdrop-blur-sm sticky top-0 border-b border-primary/60"
+  backdrop-blur-sm sticky z-50 top-0 border-b border-primary/60"
     >
       {/* Left: Project Name */}
       <h1 className="hover:cursor-pointer" onClick={() => router.push("/")}>
