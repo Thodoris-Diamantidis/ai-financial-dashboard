@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import { UserProvider } from "../lib/UserContext";
 import { ThemeProvider } from "./components/theme-provider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { searchStocks } from "@/lib/actions";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,11 +18,12 @@ export const metadata: Metadata = {
   description: "Market data visualized and research with use of AI",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialStocks = await searchStocks();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased `}>
@@ -35,7 +37,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <UserProvider>
-              <Navbar />
+              <Navbar initialStocks={initialStocks} />
               <main>{children}</main>
             </UserProvider>
           </ThemeProvider>

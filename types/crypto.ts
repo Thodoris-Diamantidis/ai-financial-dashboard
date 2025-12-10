@@ -1,3 +1,5 @@
+import { StringToBoolean } from "class-variance-authority/types";
+
 export interface Coin {
   id: string;
   symbol: string;
@@ -38,4 +40,33 @@ export interface CoinComboboxProp {
 export interface chartData {
   date: string;
   price: Number;
+}
+
+export interface Stock {
+  symbol: string;
+  name: string;
+  exchange: string;
+  type: string;
+}
+
+export type StockWithWatchlistStatus = Stock & {
+  isInWatchlist: boolean;
+};
+
+export interface SearchCommandProps {
+  renderAs?: "button" | "text";
+  label?: string;
+  initialStocks: StockWithWatchlistStatus[];
+}
+
+export interface FinnhubSearchResult {
+  symbol: string;
+  description: string;
+  displaySymbol?: string;
+  type: string;
+}
+
+export interface FinnhubSearchResponse {
+  count: number;
+  result: FinnhubSearchResult[];
 }

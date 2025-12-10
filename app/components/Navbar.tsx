@@ -7,8 +7,14 @@ import { useUser } from "@/lib/UserContext";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import UserMenu from "./UserMenu";
+import SearchCommand from "./SearchCommand";
+import { StockWithWatchlistStatus } from "@/types/crypto";
 
-export default function Navbar() {
+export default function Navbar({
+  initialStocks,
+}: {
+  initialStocks: StockWithWatchlistStatus[];
+}) {
   const router = useRouter();
   const { user, loading, setUser } = useUser();
 
@@ -33,11 +39,10 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-primary" />
-              <Input
-                type="search"
-                placeholder="Search a stock/coin..."
-                className=" pl-8 border-none shadow-none w-32 sm:w-48 md:w-64 lg:w-72"
+              <SearchCommand
+                renderAs="text"
+                label="Search"
+                initialStocks={initialStocks}
               />
             </div>
             <ThemeToggle />
