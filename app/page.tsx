@@ -13,6 +13,7 @@ export default function Home() {
     <div className={`p-2 min-h-screen`}>
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1.1fr] mt-4">
         <div className="w-full">
+          <h3 className="font-semibold text-2xl  mb-5">Crypto Overview</h3>
           <PriceCards />
           <CryptoChart />
 

@@ -50,7 +50,9 @@ export default function UserMenu({ user, onLogout }: Props) {
           <DropdownMenuItem onClick={() => router.push("/profile")}>
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem>Manage Favorites</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/watchlist")}>
+            Manage Favorites
+          </DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

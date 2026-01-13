@@ -26,31 +26,29 @@ export function CryptoChart() {
   const [chartData, setChartData] = useState<chartData[]>([]);
 
   function aggregateByDay(data: [number, number][], days: number) {
-    const now = Date.now();
-    const cutoff = now - days * 24 * 60 * 60 * 1000;
+    if (!data.length) return [];
 
-    // Filter only last N days
-    const filtered = data.filter(([timestamp]) => timestamp >= cutoff);
+    const maxTs = Math.max(...data.map((d) => d[0]));
+    const cutoff = maxTs - days * 86400000;
 
-    // Group by day
-    const grouped: { [day: string]: number[] } = {};
-    filtered.forEach(([timestamp, price]) => {
-      const day = new Date(timestamp).toLocaleDateString("en-US", {
+    const map: Record<string, number> = {};
+
+    for (const [ts, raw] of data) {
+      if (ts < cutoff) continue;
+
+      const price = Number(raw);
+      if (isNaN(price)) continue;
+
+      const day = new Date(ts).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         month: "short",
         day: "numeric",
       });
-      if (!grouped[day]) grouped[day] = [];
-      grouped[day].push(price);
-    });
 
-    // Take average for each day (or pick last point)
-    const chartData = Object.entries(grouped).map(([date, prices]) => ({
-      date,
-      price: Number(prices[prices.length - 1].toFixed(2)), // last price of the day
-      // or use average: prices.reduce((a,b)=>a+b,0)/prices.length
-    }));
+      map[day] = price;
+    }
 
-    return chartData;
+    return Object.entries(map).map(([date, price]) => ({ date, price }));
   }
 
   useEffect(() => {
@@ -135,12 +133,13 @@ export function CryptoChart() {
           return;
         }
         const prices: [number, number][] = data.prices;
+        console.log("RAW API prices:", prices.slice(0, 5));
 
         const filteredPrices = aggregateByDay(
           prices,
           selectedPeriod === "7D" ? 7 : selectedPeriod === "15D" ? 15 : 30
         );
-
+        console.log("FINAL chartData:", filteredPrices);
         setChartData(filteredPrices);
       }
     }
