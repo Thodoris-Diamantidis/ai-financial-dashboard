@@ -7,6 +7,7 @@ import {
 } from "@/types/crypto";
 import { POPULAR_STOCK_SYMBOLS } from "@/lib/constants";
 import { cache } from "react";
+import { getCurrentUserFromServer } from "../auth";
 
 const FINNHUB_BASE_URL = "https://finnhub.io/api/v1";
 const NEXT_PUBLIC_FINNHUB_API_KEY = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
@@ -33,6 +34,17 @@ export { fetchJSON };
 export const searchStocks = cache(
   async (query?: string): Promise<StockWithWatchlistStatus[]> => {
     try {
+      const user = await getCurrentUserFromServer();
+
+      let userWatchlistSymbols: string[] = [];
+
+      if (user) {
+        userWatchlistSymbols = user.favorites || [];
+      } else {
+        // User is not logged in — return empty watchlist array
+        userWatchlistSymbols = [];
+      }
+
       const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
       if (!token) {
         // If no token, log and return empty to avoid throwing per requirements
@@ -110,7 +122,7 @@ export const searchStocks = cache(
             name,
             exchange,
             type,
-            isInWatchlist: false,
+            isInWatchlist: userWatchlistSymbols.includes(upper),
           };
           return item;
         })

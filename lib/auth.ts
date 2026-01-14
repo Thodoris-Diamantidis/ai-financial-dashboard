@@ -2,6 +2,9 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { NextRequest } from "next/server";
 import { parse } from "cookie";
+import { cookies } from "next/headers";
+import clientPromise from "./mongodb";
+import { ObjectId } from "mongodb";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN: SignOptions["expiresIn"] = (process.env.JWT_EXPIRES_IN ||
@@ -25,4 +28,24 @@ export function verifyToken(token?: string) {
 
 export function signToken(payload: object) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+}
+
+//Fetch the currently logged-in user in server actions
+export async function getCurrentUserFromServer() {
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
+
+  if (!token) return null;
+
+  const decoded = verifyToken(token);
+  if (!decoded?.userId) return null;
+
+  const client = await clientPromise;
+  const db = client.db("ai_finance");
+
+  const user = await db
+    .collection("users")
+    .findOne({ _id: new ObjectId(decoded.userId) });
+
+  return user;
 }

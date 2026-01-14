@@ -15,12 +15,15 @@ import { SearchCommandProps, StockWithWatchlistStatus } from "@/types/crypto";
 import { TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import WatchlistButton from "./WatchlistButton";
+import { useUser } from "@/lib/UserContext";
 
 export default function SearchCommand({
   renderAs = "button",
   label = "Add stock",
   initialStocks,
 }: SearchCommandProps) {
+  const { user: currentUser } = useUser();
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,6 +32,17 @@ export default function SearchCommand({
 
   const isSearchMode = !!searchTerm.trim();
   const displayStocks = isSearchMode ? stocks : stocks?.slice(0, 10);
+
+  const [watchlistMap, setWatchlistMap] = useState<Record<string, boolean>>({});
+  // Populate the map whenever initialStocks change
+  useEffect(() => {
+    const map: Record<string, boolean> = {};
+    initialStocks.forEach((s) => {
+      map[s.symbol] = s.isInWatchlist;
+    });
+    setWatchlistMap(map);
+    setStocks(initialStocks);
+  }, [initialStocks]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -102,7 +116,7 @@ export default function SearchCommand({
               </div>
               {displayStocks?.map((stock, i) => (
                 <li
-                  key={stock.symbol}
+                  key={`${stock.symbol}-${i}`} //Unique key now
                   className="rounded-none my-3 px-1 w-full data-[selected=true]:bg-gray-600"
                 >
                   <Link
@@ -117,6 +131,22 @@ export default function SearchCommand({
                     <div className="text-sm">
                       {stock.symbol} | {stock.exchange} | {stock.type}
                     </div>
+                    {currentUser && (
+                      <WatchlistButton
+                        symbol={stock.symbol}
+                        company={stock.name}
+                        isInWatchlist={
+                          watchlistMap[stock.symbol] ?? stock.isInWatchlist
+                        }
+                        type="icon"
+                        onChange={(newState: boolean) => {
+                          setWatchlistMap((prev) => ({
+                            ...prev,
+                            [stock.symbol]: newState,
+                          }));
+                        }}
+                      />
+                    )}
                   </Link>
                 </li>
               ))}
