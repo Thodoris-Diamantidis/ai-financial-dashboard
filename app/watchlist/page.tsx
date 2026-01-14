@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { searchStocks } from "@/lib/actions";
+import { searchStocks } from "@/lib/actions/finnhub.actions";
 import SearchCommand from "../components/SearchCommand";
 
 const Watchlist = async () => {

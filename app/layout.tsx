@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import { UserProvider } from "../lib/UserContext";
 import { ThemeProvider } from "./components/theme-provider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { searchStocks } from "@/lib/actions";
+import { searchStocks } from "@/lib/actions/finnhub.actions";
 
 const inter = Inter({
   subsets: ["latin"],

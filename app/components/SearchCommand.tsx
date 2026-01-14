@@ -10,7 +10,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useDebounce } from "@/hooks/useDebounce";
-import { searchStocks } from "@/lib/actions";
+import { searchStocks } from "@/lib/actions/finnhub.actions";
 import { SearchCommandProps, StockWithWatchlistStatus } from "@/types/crypto";
 import { TrendingUp } from "lucide-react";
 import Link from "next/link";
@@ -65,6 +65,14 @@ export default function SearchCommand({
     setSearchTerm("");
     setStocks(initialStocks);
   };
+
+  //If the user closes the Search with escape remove any filters
+  useEffect(() => {
+    if (!open) {
+      setSearchTerm("");
+      setStocks(initialStocks);
+    }
+  }, [open]);
 
   return (
     <>
