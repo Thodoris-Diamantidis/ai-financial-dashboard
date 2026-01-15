@@ -20,9 +20,9 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
 
   return (
     <>
-      <Table className="scrollbar-hide-default watchlist-table">
+      <Table className="scrollbar-hide-default relative! overflow-hidden w-full! rounded-lg!">
         <TableHeader>
-          <TableRow className="table-header-row">
+          <TableRow className="font-medium border-b border-gray-600 hover:bg-gray-500">
             {WATCHLIST_TABLE_HEADER.map((label) => (
               <TableHead className="table-header" key={label}>
                 {label}
@@ -34,32 +34,38 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
           {watchlist.map((item, index) => (
             <TableRow
               key={item.symbol + index}
-              className="table-row"
+              className="border-b cursor-pointer border-gray-600 hover:border-primary transition-colors"
               onClick={() =>
                 router.push(`/stocks/${encodeURIComponent(item.symbol)}`)
               }
             >
-              <TableCell className="pl-4 table-cell">{item.company}</TableCell>
-              <TableCell className="table-cell">{item.symbol}</TableCell>
-              <TableCell className="table-cell">
+              <TableCell className="pl-4 font-medium text-base">
+                {item.company}
+              </TableCell>
+              <TableCell className="font-medium text-base">
+                {item.symbol}
+              </TableCell>
+              <TableCell className="font-medium text-base">
                 {item.priceFormatted || "—"}
               </TableCell>
               <TableCell
                 className={cn(
-                  "table-cell",
+                  "font-medium text-base",
                   getChangeColorClass(item.changePercent)
                 )}
               >
                 {item.changeFormatted || "—"}
               </TableCell>
-              <TableCell className="table-cell">
+              <TableCell className="font-medium text-base">
                 {item.marketCap || "—"}
               </TableCell>
-              <TableCell className="table-cell">
+              <TableCell className="font-medium text-base">
                 {item.peRatio || "—"}
               </TableCell>
               <TableCell>
-                <Button className="add-alert">Add Alert</Button>
+                <Button className="flex text-sm items-center whitespace-nowrap gap-1.5 px-3 w-fit py-2 text-primary border border-primary/20 rounded font-medium bg-transparent hover:bg-transparent cursor-pointer transition-colors;">
+                  Add Alert
+                </Button>
               </TableCell>
               <TableCell>
                 <WatchlistButton

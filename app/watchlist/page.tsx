@@ -27,7 +27,7 @@ const Watchlist = async () => {
 
   return (
     <section className=" lg:col-span-2 space-y-8">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-xl md:text-2xl font-bold">Watchlist</h2>
           <SearchCommand initialStocks={initialStocks} />
