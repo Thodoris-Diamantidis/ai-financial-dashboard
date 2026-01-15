@@ -1,4 +1,6 @@
 import TradingViewWidget from "@/app/components/TradingViewWidget";
+import WatchlistButton from "@/app/components/WatchlistButton";
+import { getStocksDetails } from "@/lib/actions/finnhub.actions";
 // import WatchlistButton from "@/components/WatchlistButton"; //to kanw meta gia favorite stocks.
 import {
   SYMBOL_INFO_WIDGET_CONFIG,
@@ -8,12 +10,17 @@ import {
   COMPANY_PROFILE_WIDGET_CONFIG,
   COMPANY_FINANCIALS_WIDGET_CONFIG,
 } from "@/lib/constants";
+import { getUserWatchlist } from "@/lib/user";
 import { StockDetailsPageProps } from "@/types/crypto";
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
   const { symbol } = await params;
   const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
+  const stockData = await getStocksDetails(symbol.toUpperCase());
+  const watchlist = await getUserWatchlist();
+
+  const isInWatchlist = watchlist.includes(symbol.toUpperCase());
   return (
     <div className="flex min-h-screen p-4 md:p-6 lg:p-8">
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
@@ -41,9 +48,15 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
         </div>
 
         {/* Right column */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 mt-6">
           <div className="flex items-center justify-between">
-            {/* <WatchlistButton symbol={symbol.toUpperCase()} company={symbol.toUpperCase()} isInWatchlist={false} /> */}
+            <WatchlistButton
+              symbol={symbol.toUpperCase()}
+              company={stockData?.company || symbol.toUpperCase()}
+              isInWatchlist={isInWatchlist}
+              type="button"
+              showTrashIcon={true}
+            />
           </div>
 
           <TradingViewWidget

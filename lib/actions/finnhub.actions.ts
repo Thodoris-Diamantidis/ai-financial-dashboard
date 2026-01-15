@@ -1,8 +1,11 @@
 "use server";
 
 import {
+  FinancialsData,
   FinnhubSearchResponse,
   FinnhubSearchResult,
+  ProfileData,
+  QuoteData,
   StockWithWatchlistStatus,
 } from "@/types/crypto";
 import { POPULAR_STOCK_SYMBOLS } from "@/lib/constants";
@@ -135,3 +138,48 @@ export const searchStocks = cache(
     }
   }
 );
+
+export const getStocksDetails = cache(async (symbol: string) => {
+  const cleanSymbol = symbol.trim().toUpperCase();
+  try {
+    const [quote, profile, financials] = await Promise.all([
+      fetchJSON(
+        // Price data - no caching for accuracy
+        `${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`
+      ),
+      fetchJSON(
+        // Company info - cache 1hr (rarely changes)
+        `${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`,
+        3600
+      ),
+      fetchJSON(
+        // Financial metrics (P/E, etc.) - cache 30min
+        `${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`,
+        3600
+      ),
+    ]);
+
+    // Type cast the respone
+    const quoteData = quote as QuoteData;
+    const profileData = profile as ProfileData;
+    const financialsData = financials as FinancialsData;
+
+    // Check if we got valid quote and profile data
+    if (!quoteData?.c || !profileData?.name)
+      throw new Error("Invalid stock data received from API");
+
+    const changePercent = quoteData.dp || 0;
+    const peRatio = financialsData?.metric?.peNormalizedAnnual || null;
+
+    return {
+      symbol: cleanSymbol,
+      company: profileData?.name,
+      currentPrice: quoteData.c,
+      changePercent,
+      priceFormatted: quoteData.c,
+      changeFormatted: changePercent,
+      peRatio: peRatio?.toFixed(1) || "—",
+      marketCapFormatted: profileData?.marketCapitalization || 0,
+    };
+  } catch (err) {}
+});

@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   addToWatchlist,
   removeFromWatchlist,
@@ -85,8 +84,16 @@ export default function WatchlistButton({
   }
 
   return (
-    <Button variant={added ? "secondary" : "default"} onClick={toggle}>
-      {added ? "Remove from Watchlist" : "Add to Watchlist"}
-    </Button>
+    <button
+      className={`w-full h-11 rounded font-semibold cursor-pointer flex items-center justify-center gap-2 text-base transition-colors ${
+        added
+          ? "bg-red-500 hover:bg-red-600 text-white"
+          : "bg-yellow-500 hover:bg-yellow-600 text-black"
+      }`}
+      onClick={toggle}
+    >
+      {showTrashIcon && added ? <Trash2 /> : null}
+      <span>{added ? "Remove from Watchlist" : "Add to Watchlist"}</span>
+    </button>
   );
 }

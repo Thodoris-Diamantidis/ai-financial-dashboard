@@ -76,3 +76,17 @@ export interface StockDetailsPageProps {
     symbol: string;
   }>;
 }
+
+export type QuoteData = {
+  c?: number;
+  dp?: number;
+};
+
+export type ProfileData = {
+  name?: string;
+  marketCapitalization?: number;
+};
+
+export type FinancialsData = {
+  metric?: { [key: string]: number };
+};
