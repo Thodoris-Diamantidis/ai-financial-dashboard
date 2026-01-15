@@ -90,3 +90,18 @@ export type ProfileData = {
 export type FinancialsData = {
   metric?: { [key: string]: number };
 };
+
+export type WatchlistTableProps = {
+  watchlist: StockWithData[];
+};
+
+export type StockWithData = {
+  symbol: string;
+  company: string;
+  currentPrice?: number;
+  changePercent?: number;
+  priceFormatted?: string;
+  changeFormatted?: string;
+  marketCap?: string;
+  peRatio?: string;
+};

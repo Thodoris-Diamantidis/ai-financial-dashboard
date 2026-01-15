@@ -11,6 +11,11 @@ import {
 import { POPULAR_STOCK_SYMBOLS } from "@/lib/constants";
 import { cache } from "react";
 import { getCurrentUserFromServer } from "../auth";
+import {
+  formatChangePercent,
+  formatMarketCapValue,
+  formatPrice,
+} from "../utils";
 
 const FINNHUB_BASE_URL = "https://finnhub.io/api/v1";
 const NEXT_PUBLIC_FINNHUB_API_KEY = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
@@ -171,15 +176,18 @@ export const getStocksDetails = cache(async (symbol: string) => {
     const changePercent = quoteData.dp || 0;
     const peRatio = financialsData?.metric?.peNormalizedAnnual || null;
 
+    const marketCapFullUSD =
+      (profileData?.marketCapitalization || 0) * 1_000_000;
+
     return {
       symbol: cleanSymbol,
       company: profileData?.name,
       currentPrice: quoteData.c,
       changePercent,
-      priceFormatted: quoteData.c,
-      changeFormatted: changePercent,
+      priceFormatted: formatPrice(quoteData.c),
+      changeFormatted: formatChangePercent(changePercent),
       peRatio: peRatio?.toFixed(1) || "—",
-      marketCapFormatted: profileData?.marketCapitalization || 0,
+      marketCapFormatted: formatMarketCapValue(marketCapFullUSD),
     };
   } catch (err) {}
 });
