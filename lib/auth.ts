@@ -32,7 +32,7 @@ export function signToken(payload: object) {
 
 //Fetch the currently logged-in user in server actions
 export async function getCurrentUserFromServer() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = (await cookieStore).get("token")?.value;
 
   if (!token) return null;

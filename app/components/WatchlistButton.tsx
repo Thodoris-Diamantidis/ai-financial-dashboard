@@ -5,6 +5,7 @@ import {
   removeFromWatchlist,
 } from "@/lib/actions/watchlist.actions";
 import { Star, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ export default function WatchlistButton({
   showTrashIcon = false,
   onChange,
 }: WatchlistButtonProps) {
+  const router = useRouter();
   const [added, setAdded] = useState<boolean>(!!isInWatchlist);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const lastIntent = useRef<boolean>(isInWatchlist);
@@ -45,13 +47,14 @@ export default function WatchlistButton({
           toast.success(`${symbol} removed from watchlist`);
         }
 
+        router.refresh();
         onChange?.(next);
       } catch {
         setAdded(lastIntent.current);
         toast.error("Something went wrong");
       }
     },
-    [symbol, company]
+    [symbol, company, router, onChange]
   );
 
   const toggle = (e: React.MouseEvent) => {

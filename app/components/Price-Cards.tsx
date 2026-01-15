@@ -3,14 +3,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PriceCardsData } from "@/types/crypto";
 import { useState, useEffect } from "react";
 import { ArrowBigDown } from "lucide-react";
+import { useRef } from "react";
 
 export default function PriceCards() {
   const [threeTopCurrencies, setThreeTopCurrencies] = useState<
     PriceCardsData[]
   >([]);
   const [loading, setLoading] = useState(true);
+  //Now React can mount/unmount all it wants — it will only fetch once per real page load.
+  const didFetch = useRef(false);
 
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
+
     async function fetchCoins() {
       try {
         const res = await fetch("/api/get-crypto");

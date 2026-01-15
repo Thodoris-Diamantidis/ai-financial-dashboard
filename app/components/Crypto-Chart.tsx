@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { chartData, CryptoComboBox } from "@/types/crypto";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CoinCombobox } from "./Coin-Combobox";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -24,6 +24,8 @@ export function CryptoChart() {
   const selectedCoin = comboBoxCoins?.find((coin) => coin.value === value);
 
   const [chartData, setChartData] = useState<chartData[]>([]);
+
+  const didFetch = useRef(false);
 
   function aggregateByDay(data: [number, number][], days: number) {
     if (!data.length) return [];
@@ -52,6 +54,9 @@ export function CryptoChart() {
   }
 
   useEffect(() => {
+    if (didFetch.current) return;
+    didFetch.current = true;
+
     async function fetchCoins() {
       try {
         const res = await fetch("/api/get-crypto");
