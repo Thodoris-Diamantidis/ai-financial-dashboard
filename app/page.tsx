@@ -15,12 +15,6 @@ export default function Home() {
           <h3 className="font-semibold text-2xl  mb-5">Crypto Overview</h3>
           <PriceCards />
           <CryptoChart />
-
-          <TradingViewWidget
-            title="Timeline"
-            scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js"
-            config={TOP_STORIES_WIDGET_CONFIG}
-          />
         </div>
         <div>
           <TradingViewWidget
@@ -30,6 +24,11 @@ export default function Home() {
           />
         </div>
       </div>
+      <TradingViewWidget
+        title="Timeline"
+        scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js"
+        config={TOP_STORIES_WIDGET_CONFIG}
+      />
     </div>
   );
 }

@@ -147,7 +147,7 @@ export function CryptoChart() {
   }, [selectedCoin, selectedPeriod]);
 
   return (
-    <Card className="col-span-4 m-5 border-none shadow-none">
+    <Card className="col-span-4 m-5 border-none shadow-none h-[485px]">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-base font-normal">
           <CoinCombobox
