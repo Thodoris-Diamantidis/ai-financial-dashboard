@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { signUpWithEmail } from "@/lib/actions/auth.actions";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -24,18 +26,30 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   async function handleRegister(e: React.FormEvent) {
-    e.preventDefault();
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, name }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || "Error");
-    } else {
-      router.push("/login");
+    try {
+      e.preventDefault();
+
+      const result = await signUpWithEmail({ email, password, name });
+      if (result.success) router.push("/");
+    } catch (err) {
+      console.log(err);
+      toast.error("Sign-Up failed", {
+        description:
+          err instanceof Error ? err.message : "Failed to create an account",
+      });
     }
+
+    // const res = await fetch("/api/auth/register", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ email, password, name }),
+    // });
+    // const data = await res.json();
+    // if (!res.ok) {
+    //   setError(data.error || "Error");
+    // } else {
+    //   router.push("/login");
+    // }
   }
 
   return (

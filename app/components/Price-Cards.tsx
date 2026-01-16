@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PriceCardsData } from "@/types/crypto";
+import { PriceCardsData } from "@/types/global";
 import { useState, useEffect } from "react";
 import { ArrowBigDown } from "lucide-react";
 import { useRef } from "react";

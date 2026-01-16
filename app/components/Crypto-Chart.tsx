@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { chartData, CryptoComboBox } from "@/types/crypto";
+import { chartData, CryptoComboBox } from "@/types/global";
 import { useEffect, useRef, useState } from "react";
 import { CoinCombobox } from "./Coin-Combobox";
 import { Skeleton } from "@/components/ui/skeleton";

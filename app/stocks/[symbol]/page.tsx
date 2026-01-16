@@ -11,7 +11,7 @@ import {
   COMPANY_FINANCIALS_WIDGET_CONFIG,
 } from "@/lib/constants";
 import { getUserWatchlist } from "@/lib/user";
-import { StockDetailsPageProps } from "@/types/crypto";
+import { StockDetailsPageProps } from "@/types/global";
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
   const { symbol } = await params;

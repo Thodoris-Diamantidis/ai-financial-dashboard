@@ -105,3 +105,15 @@ export type StockWithData = {
   marketCap?: string;
   peRatio?: string;
 };
+
+export type WelcomeEmailData = {
+  email: string;
+  name: string;
+  intro: string;
+};
+
+export type SignUpFormData = {
+  name: string;
+  email: string;
+  password: string;
+};

@@ -7,7 +7,7 @@ import {
   ProfileData,
   QuoteData,
   StockWithWatchlistStatus,
-} from "@/types/crypto";
+} from "@/types/global";
 import { POPULAR_STOCK_SYMBOLS } from "@/lib/constants";
 import { cache } from "react";
 import { getCurrentUserFromServer } from "../auth";

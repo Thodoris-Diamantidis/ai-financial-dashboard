@@ -6,6 +6,7 @@ import { UserProvider } from "../lib/UserContext";
 import { ThemeProvider } from "./components/theme-provider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { searchStocks } from "@/lib/actions/finnhub.actions";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,7 +39,10 @@ export default async function RootLayout({
           >
             <UserProvider>
               <Navbar initialStocks={initialStocks} />
-              <main>{children}</main>
+              <main>
+                {children}
+                <Toaster />
+              </main>
             </UserProvider>
           </ThemeProvider>
         </GoogleOAuthProvider>

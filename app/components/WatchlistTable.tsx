@@ -13,7 +13,7 @@ import { WATCHLIST_TABLE_HEADER } from "@/lib/constants";
 import { cn, getChangeColorClass } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import WatchlistButton from "./WatchlistButton";
-import { WatchlistTableProps } from "@/types/crypto";
+import { WatchlistTableProps } from "@/types/global";
 
 export function WatchlistTable({ watchlist }: WatchlistTableProps) {
   const router = useRouter();
@@ -22,7 +22,7 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
     <>
       <Table className="scrollbar-hide-default relative! overflow-hidden w-full! rounded-lg!">
         <TableHeader>
-          <TableRow className="font-medium border-b border-gray-600 hover:bg-gray-500">
+          <TableRow className="font-medium border-b border-primary hover:bg-gray-700">
             {WATCHLIST_TABLE_HEADER.map((label) => (
               <TableHead className="table-header" key={label}>
                 {label}
@@ -63,7 +63,7 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
                 {item.peRatio || "—"}
               </TableCell>
               <TableCell>
-                <Button className="flex text-sm items-center whitespace-nowrap gap-1.5 px-3 w-fit py-2 text-primary border border-primary/20 rounded font-medium bg-transparent hover:bg-transparent cursor-pointer transition-colors;">
+                <Button className="flex text-sm items-center whitespace-nowrap gap-1.5 px-3 w-fit py-2 text-primary border border-primary/20 rounded font-medium bg-transparent hover:bg-primary hover:text-white cursor-pointer transition-colors;">
                   Add Alert
                 </Button>
               </TableCell>

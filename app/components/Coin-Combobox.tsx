@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { CoinComboboxProp } from "@/types/crypto";
+import { CoinComboboxProp } from "@/types/global";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
