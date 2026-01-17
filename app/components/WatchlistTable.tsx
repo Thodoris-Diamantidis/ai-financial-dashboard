@@ -22,7 +22,7 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
     <>
       <Table className="scrollbar-hide-default relative! overflow-hidden w-full! rounded-lg!">
         <TableHeader>
-          <TableRow className="font-medium border-b border-primary hover:bg-gray-700">
+          <TableRow className="font-medium border-b border-primary bg-gray-50d0 hover:bg-gray-700">
             {WATCHLIST_TABLE_HEADER.map((label) => (
               <TableHead className="table-header" key={label}>
                 {label}

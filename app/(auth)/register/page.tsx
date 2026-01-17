@@ -30,7 +30,7 @@ export default function RegisterPage() {
       e.preventDefault();
 
       const result = await signUpWithEmail({ email, password, name });
-      if (result.success) router.push("/");
+      if (result.success) router.push("/login");
     } catch (err) {
       console.log(err);
       toast.error("Sign-Up failed", {

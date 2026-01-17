@@ -1,5 +1,10 @@
 import { StringToBoolean } from "class-variance-authority/types";
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+};
 export interface Coin {
   id: string;
   symbol: string;
@@ -116,4 +121,28 @@ export type SignUpFormData = {
   name: string;
   email: string;
   password: string;
+};
+
+export type RawNewsArticle = {
+  id: number;
+  headline?: string;
+  summary?: string;
+  source?: string;
+  url?: string;
+  datetime?: number;
+  image?: string;
+  category?: string;
+  related?: string;
+};
+
+export type MarketNewsArticle = {
+  id: number;
+  headline: string;
+  summary: string;
+  source: string;
+  url: string;
+  datetime: number;
+  category: string;
+  related: string;
+  image?: string;
 };
