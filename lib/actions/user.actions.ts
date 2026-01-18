@@ -13,7 +13,9 @@ export const getAllUsersForNewsEmail = async () => {
         // email thats exists and its not null
         { email: { $exists: true, $ne: null } },
         // The fields to return in the query
-        { projection: { _id: 1, email: 1, name: 1 } }
+
+        //1/18 added alerts to make work of priceAlerts
+        { projection: { _id: 1, email: 1, name: 1, alerts: 1 } },
       )
       .toArray();
 
@@ -23,6 +25,7 @@ export const getAllUsersForNewsEmail = async () => {
         id: user._id || "",
         email: user.email,
         name: user.name,
+        alerts: user.alerts,
       }));
   } catch (err) {
     console.error("Error fetching users for news email:", err);

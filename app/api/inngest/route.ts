@@ -1,9 +1,13 @@
 import { inngest } from "@/lib/ingest/client";
-import { sendDailyNewsSummary, sendSignUpEmail } from "@/lib/ingest/functions";
+import {
+  sendDailyNewsSummary,
+  sendPriceAlerts,
+  sendSignUpEmail,
+} from "@/lib/ingest/functions";
 import { serve } from "inngest/next";
 
 //Exposing our inngest functions via a next.js API route which will make this functions callable
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [sendSignUpEmail, sendDailyNewsSummary],
+  functions: [sendSignUpEmail, sendDailyNewsSummary, sendPriceAlerts],
 });

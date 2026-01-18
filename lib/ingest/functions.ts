@@ -1,13 +1,17 @@
 import { MarketNewsArticle, User } from "@/types/global";
 import { getAllUsersForNewsEmail } from "../actions/user.actions";
-import { sendNewsSummaryEmail, sendWelcomeEmail } from "../nodemailer";
+import {
+  sendNewsSummaryEmail,
+  sendPriceAlertEmail,
+  sendWelcomeEmail,
+} from "../nodemailer";
 import { inngest } from "./client";
 import {
   NEWS_SUMMARY_EMAIL_PROMPT,
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
 } from "./prompts";
 import { getWatchlistSymbolByEmail } from "../actions/watchlistserver.actions";
-import { getNews } from "../actions/finnhub.actions";
+import { getNews, getStocksDetails } from "../actions/finnhub.actions";
 import { formatDateToday } from "../utils";
 
 export const sendSignUpEmail = inngest.createFunction(
@@ -124,5 +128,97 @@ export const sendDailyNewsSummary = inngest.createFunction(
       );
     });
     return { succes: true, message: `Daily news summary send succesfully` };
+  },
+);
+
+export const sendPriceAlerts = inngest.createFunction(
+  { id: "price-alerts" },
+  [{ event: "app/send.price-alerts" }, { cron: "* 12 * * * " }],
+  async ({ step }) => {
+    // Step #1: Get all users
+    //We use the same method for newsEmail because it returns all we need
+    const users = await step.run("get-all-users", getAllUsersForNewsEmail);
+
+    if (!users || users.length === 0)
+      return { success: false, message: "No users found " };
+
+    for (const user of users) {
+      const alerts = user.alerts || [];
+      await step.run(`log-alerts-${user.email}`, async () => {
+        console.log("User:", user.email);
+        console.log("Alerts:", user.alerts);
+      });
+      if (!alerts.length) continue;
+
+      // Collect triggered alerts for this user
+      const triggeredAlerts: Array<{
+        symbol: string;
+        company: string;
+        currentPrice: number;
+        targetPrice: number;
+        option: "lt" | "gt" | "eq";
+      }> = [];
+
+      for (const alert of alerts) {
+        try {
+          const liveData = await getStocksDetails(alert.symbol);
+          if (!liveData) continue;
+
+          const livePrice = liveData.currentPrice;
+
+          let triggered = false;
+          switch (alert.option) {
+            case "lt":
+              triggered = livePrice < alert.targetPrice;
+              break;
+            case "gt":
+              triggered = livePrice > alert.targetPrice;
+              break;
+            case "eq":
+              triggered = livePrice === alert.targetPrice;
+              break;
+          }
+
+          if (triggered) {
+            triggeredAlerts.push({
+              symbol: alert.symbol,
+              company: liveData.company,
+              currentPrice: livePrice,
+              targetPrice: alert.targetPrice,
+              option: alert.option,
+            });
+          }
+        } catch (err) {
+          console.error(
+            `Error checking alert for ${user.email} ${alert.symbol}`,
+            err,
+          );
+        }
+      }
+
+      if (triggeredAlerts.length > 0) {
+        await step.run("send-price-alert-email", async () => {
+          console.log(triggeredAlerts);
+          for (const alert of triggeredAlerts) {
+            try {
+              await sendPriceAlertEmail({
+                email: user.email,
+                company: alert.company,
+                symbol: alert.symbol,
+                currentPrice: alert.currentPrice.toString(),
+                targetPrice: alert.targetPrice.toString(),
+                option: alert.option,
+              });
+              console.log(
+                `Price alert sent to ${user.email} for ${alert.symbol}`,
+              );
+            } catch (err) {
+              console.error(`Failed to send alert email to ${user.email}`, err);
+            }
+          }
+        });
+      }
+    }
+    return { success: true, message: "Price alerts processed" };
   },
 );
