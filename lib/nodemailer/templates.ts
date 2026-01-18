@@ -309,92 +309,173 @@ export const PRICE_ALERT_EMAIL_TEMPLATE = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="format-detection" content="telephone=no">
-<meta name="x-apple-disable-message-reformatting">
-<title>Price Alert Notification</title>
-<style type="text/css">
-    /* Dark mode styles */
-    @media (prefers-color-scheme: dark) {
-        .email-container { background-color: #141414 !important; border: 1px solid #30333A !important; }
-        .dark-bg { background-color: #050505 !important; }
-        .dark-text { color: #ffffff !important; }
-        .dark-text-secondary { color: #9ca3af !important; }
-        .dark-text-muted { color: #6b7280 !important; }
-        .dark-border { border-color: #30333A !important; }
-    }
+<title>Stock Price Alert</title>
 
-    @media only screen and (max-width: 600px) {
-        .email-container { width: 100% !important; margin: 0 !important; }
-        .mobile-padding { padding: 24px !important; }
-        .mobile-header-padding { padding: 24px 24px 12px 24px !important; }
-        .mobile-text { font-size: 14px !important; line-height: 1.5 !important; }
-        .mobile-title { font-size: 24px !important; line-height: 1.3 !important; }
-    }
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0b0b0b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
 
-    @media only screen and (max-width: 480px) {
-        .mobile-title { font-size: 22px !important; }
-        .mobile-padding { padding: 15px !important; }
-        .mobile-header-padding { padding: 15px 15px 8px 15px !important; }
-    }
+  .container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #141414;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    overflow: hidden;
+  }
+
+  .header {
+    padding: 24px;
+  }
+
+  .logo {
+    width: 120px;
+  }
+
+  .status {
+    margin: 0 24px;
+    padding: 14px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #ffffff;
+    background-color: {{statusColor}};
+  }
+
+  .content {
+    padding: 24px;
+    color: #e5e7eb;
+  }
+
+  .ticker {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+
+  .company {
+    text-align: center;
+    font-size: 14px;
+    color: #9ca3af;
+    margin-bottom: 16px;
+  }
+
+  .price-label {
+    text-align: center;
+    font-size: 13px;
+    color: #9ca3af;
+  }
+
+  .price {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 6px;
+    color: {{priceColor}};
+  }
+
+  .box {
+    background-color: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 24px;
+    font-size: 14px;
+  }
+
+  .box-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .row {
+    margin-bottom: 6px;
+  }
+
+  .explain {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #d1d5db;
+  }
+
+  .cta {
+    margin: 28px 0;
+    text-align: center;
+  }
+
+  .cta a {
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #facc15, #eab308);
+    color: #000;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    padding: 24px;
+    border-top: 1px solid #2a2a2a;
+  }
+
+  .footer a {
+    color: #9ca3af;
+    text-decoration: underline;
+    margin: 0 6px;
+  }
 </style>
 </head>
-<body style="margin:0; padding:0; background-color: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #050505;">
-<tr>
-<td align="center" class="mobile-outer-padding" style="padding: 40px 20px;">
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="email-container" style="max-width:600px; background-color:#141414; border-radius:8px; border:1px solid #30333A;">
-        
-        <!-- Header with Logo -->
-        <tr>
-            <td align="left" class="mobile-header-padding" style="padding: 40px 40px 20px 40px;">
-                <img src="https://ik.imagekit.io/8ijfrumlc/Ai%20financial%20logo.png" alt="AI Financial Logo" width="150" style="max-width: 100%; height:auto;">
-            </td>
-        </tr>
 
-        <!-- Main Content -->
-        <tr>
-            <td class="mobile-padding" style="padding: 40px 40px 40px 40px;">
+<body>
+  <div class="container">
 
-                <!-- Title -->
-                <h1 class="mobile-title dark-text" style="margin:0 0 20px 0; font-size:24px; font-weight:600; color:#FDD458; line-height:1.2;">
-                    Price Alert Notification
-                </h1>
+    <!-- Header -->
+    <div class="header">
+      <img src="https://ik.imagekit.io/8ijfrumlc/Ai%20financial%20logo.png" class="logo" />
+    </div>
 
-                <!-- Alert Details -->
-                <p class="mobile-text dark-text-secondary" style="margin:0 0 15px 0; font-size:16px; line-height:1.6;">
-                    The stock <strong>{{company}} ({{symbol}})</strong> has reached your target price.
-                </p>
+    <!-- Status -->
+    <div class="status">
+      {{statusTitle}}
+    </div>
 
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 20px 0; border-collapse: collapse;">
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #30333A; border-radius: 6px; color:#fff; font-weight:500;">Current Price:</td>
-                        <td style="padding: 12px; border: 1px solid #30333A; border-radius: 6px; color:#FDD458; font-weight:600;">{{currentPrice}}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #30333A; border-radius: 6px; color:#fff; font-weight:500;">Target Price:</td>
-                        <td style="padding: 12px; border: 1px solid #30333A; border-radius: 6px; color:#FDD458; font-weight:600;">{{targetPrice}}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 12px; border: 1px solid #30333A; border-radius: 6px; color:#fff; font-weight:500;">Alert Type:</td>
-                        <td style="padding: 12px; border: 1px solid #30333A; border-radius: 6px; color:#FDD458; font-weight:600;">{{option}}</td>
-                    </tr>
-                </table>
+    <!-- Content -->
+    <div class="content">
 
-                <!-- Optional Message -->
-                {{message}}
+      <div class="box">
+        <div class="ticker">
+            {{symbol}} · {{company}}
+        </div>
 
-                <!-- CTA Button -->
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 20px 0; width: 100%;">
-                    <tr>
-                        <td align="center">
-                            <a href="http://localhost:3000/" style="display:block; width:100%; background: linear-gradient(135deg, #FDD458 0%, #E8BA40 100%); color: #000; text-decoration:none; padding:16px 32px; border-radius:8px; font-size:16px; font-weight:500; text-align:center;">
-                                Go to Dashboard
-                            </a>
-                        </td>
-                    </tr>
-                </table>
+        <div class="price-label">Current Price:</div>
+        <div class="price">{{currentPrice}}</div>
+      </div>
 
-                <!-- Footer -->
+      <div class="box">
+        <div class="box-title">Alert Details</div>
+        <div class="row">• Condition: {{option}}</div>
+        <div class="row">• Target Price: {{targetPrice}}</div>
+      </div>
+
+      <div class="box explain">
+        <strong>{{explanationTitle}}</strong><br/>
+        {{explanationText}}
+      </div>
+
+      <div class="cta">
+        <a href="http://localhost:3000">View Dashboard</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
                 <p class="mobile-text dark-text-muted" style="margin:40px 0 0 0; font-size:14px; line-height:1.5; color:#CCDADC; text-align:center;">
                     AI Financial HQ, 200 Market Street, San Francisco, CA 94105<br>
                     <a href="#" style="color:#CCDADC; text-decoration:underline;">Unsubscribe</a> | 
@@ -402,11 +483,6 @@ export const PRICE_ALERT_EMAIL_TEMPLATE = `<!DOCTYPE html>
                     © 2025 AI Financial
                 </p>
 
-            </td>
-        </tr>
-    </table>
-</td>
-</tr>
-</table>
+  </div>
 </body>
 </html>`;

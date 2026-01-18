@@ -78,6 +78,32 @@ export const sendPriceAlertEmail = async ({
   option,
 }: SendPriceAlertEmailProps): Promise<void> => {
   try {
+    const isAbove = option === "gt";
+    const isBelow = option === "lt";
+
+    const statusTitle = isAbove
+      ? "Price Above Reached"
+      : isBelow
+        ? "Price Below Hit"
+        : "Target Price Reached";
+
+    const statusColor = isAbove ? "#16a34a" : isBelow ? "#dc2626" : "#facc15";
+    const priceColor = statusColor;
+
+    const explanationTitle = isAbove
+      ? "Opportunity Alert"
+      : isBelow
+        ? "Price Dropped"
+        : "Target Matched";
+
+    const explanationText = isAbove
+      ? `${symbol} has exceeded your target price. This could be a good moment to review your position or consider taking profits.`
+      : isBelow
+        ? `${symbol} has dropped below your target price. This may present a buying opportunity depending on your strategy.`
+        : `${symbol} has reached your exact target price. You may want to reassess your alert or position.`;
+
+    const optionSymbol = option === "lt" ? "<" : option === "gt" ? ">" : "=";
+
     const htmlTemplate = PRICE_ALERT_EMAIL_TEMPLATE.replace(
       "{{company}}",
       company,
@@ -85,22 +111,27 @@ export const sendPriceAlertEmail = async ({
       .replace("{{symbol}}", symbol)
       .replace("{{currentPrice}}", currentPrice)
       .replace("{{targetPrice}}", targetPrice)
-      .replace(
-        "{{option}}",
-        option === "lt" ? "<" : option === "gt" ? ">" : "=",
-      );
+      .replace("{{option}}", optionSymbol)
+      .replace("{{statusTitle}}", statusTitle)
+      .replace("{{statusColor}}", statusColor)
+      .replace("{{priceColor}}", priceColor)
+      .replace("{{explanationTitle}}", explanationTitle)
+      .replace("{{explanationText}}", explanationText);
 
     const mailOptions = {
-      from: `AI Financial Alerts <no-reply@ai-financial.com>`,
+      from: `Signalist Alerts <no-reply@signalist.com>`,
       to: email,
-      subject: `Price Alert: ${symbol} is ${option === "lt" ? "below" : option === "gt" ? "above" : "at"} your target`,
-      text: `Price alert for ${symbol}: Current ${currentPrice}, Target ${targetPrice}`,
+      subject: `🔔 ${symbol} ${isAbove ? "above" : isBelow ? "below" : "at"} your target`,
+      text: `Price alert for ${symbol}. Current: ${currentPrice}, Target: ${targetPrice}`,
       html: htmlTemplate,
     };
 
     await transporter.sendMail(mailOptions);
-    console.log(`Price alert sent to ${email} for ${symbol}`);
+    console.log(`✅ Price alert sent to ${email} for ${symbol}`);
   } catch (err) {
-    console.error(`Failed to send price alert to ${email} for ${symbol}`, err);
+    console.error(
+      `❌ Failed to send price alert to ${email} for ${symbol}`,
+      err,
+    );
   }
 };

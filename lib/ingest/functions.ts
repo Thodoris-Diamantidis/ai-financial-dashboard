@@ -144,6 +144,7 @@ export const sendPriceAlerts = inngest.createFunction(
 
     for (const user of users) {
       const alerts = user.alerts || [];
+      //step for testing purposes
       await step.run(`log-alerts-${user.email}`, async () => {
         console.log("User:", user.email);
         console.log("Alerts:", user.alerts);
@@ -198,7 +199,6 @@ export const sendPriceAlerts = inngest.createFunction(
 
       if (triggeredAlerts.length > 0) {
         await step.run("send-price-alert-email", async () => {
-          console.log(triggeredAlerts);
           for (const alert of triggeredAlerts) {
             try {
               await sendPriceAlertEmail({
