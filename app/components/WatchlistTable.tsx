@@ -14,6 +14,7 @@ import { cn, getChangeColorClass } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import WatchlistButton from "./WatchlistButton";
 import { WatchlistTableProps } from "@/types/global";
+import WatchlistDialog from "./WatchlistDialog";
 
 export function WatchlistTable({ watchlist }: WatchlistTableProps) {
   const router = useRouter();
@@ -34,12 +35,14 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
           {watchlist.map((item, index) => (
             <TableRow
               key={item.symbol + index}
-              className="border-b cursor-pointer border-gray-600 hover:border-primary transition-colors"
-              onClick={() =>
-                router.push(`/stocks/${encodeURIComponent(item.symbol)}`)
-              }
+              className="border-b  border-gray-600 hover:border-primary transition-colors"
             >
-              <TableCell className="pl-4 font-medium text-base">
+              <TableCell
+                onClick={() =>
+                  router.push(`/stocks/${encodeURIComponent(item.symbol)}`)
+                }
+                className="pl-4 font-medium text-base cursor-pointer"
+              >
                 {item.company}
               </TableCell>
               <TableCell className="font-medium text-base">
@@ -51,7 +54,7 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
               <TableCell
                 className={cn(
                   "font-medium text-base",
-                  getChangeColorClass(item.changePercent)
+                  getChangeColorClass(item.changePercent),
                 )}
               >
                 {item.changeFormatted || "—"}
@@ -63,9 +66,17 @@ export function WatchlistTable({ watchlist }: WatchlistTableProps) {
                 {item.peRatio || "—"}
               </TableCell>
               <TableCell>
-                <Button className="flex text-sm items-center whitespace-nowrap gap-1.5 px-3 w-fit py-2 text-primary border border-primary/20 rounded font-medium bg-transparent hover:bg-primary hover:text-white cursor-pointer transition-colors;">
+                {/* <Button className="flex text-sm items-center whitespace-nowrap gap-1.5 px-3 w-fit py-2 text-primary border border-primary/20 rounded font-medium bg-transparent hover:bg-primary hover:text-white cursor-pointer transition-colors;">
                   Add Alert
-                </Button>
+                </Button> */}
+
+                <WatchlistDialog
+                  symbol={item.symbol}
+                  company={item.company}
+                  priceFormatted={item.priceFormatted || "-"}
+                  changeFormatted={item.changeFormatted || "-"}
+                  logo={item.logo || "-"}
+                />
               </TableCell>
               <TableCell>
                 <WatchlistButton

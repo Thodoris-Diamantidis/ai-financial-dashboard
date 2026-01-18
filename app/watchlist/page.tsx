@@ -1,13 +1,14 @@
 import { Star } from "lucide-react";
 import { searchStocks } from "@/lib/actions/finnhub.actions";
 import SearchCommand from "../components/SearchCommand";
-import { getWatchlistWithData } from "@/lib/user";
+import { getAlertsWithData, getWatchlistWithData } from "@/lib/user";
 import { WatchlistTable } from "../components/WatchlistTable";
+import AlertCard from "../components/AlertCard";
 
 const Watchlist = async () => {
   const watchlist = await getWatchlistWithData();
+  const alertlist = await getAlertsWithData();
   const initialStocks = await searchStocks();
-
   //Empty state
   if (watchlist.length === 0) {
     return (
@@ -26,13 +27,24 @@ const Watchlist = async () => {
   }
 
   return (
-    <section className=" lg:col-span-2 space-y-8">
-      <div className="flex flex-col gap-6 p-5">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl md:text-2xl font-bold">Watchlist</h2>
-          <SearchCommand initialStocks={initialStocks} />
-        </div>
-        <WatchlistTable watchlist={watchlist} />
+    <section className="w-full px-6 m-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Watchlist – 2/3 */}
+        <section className="lg:col-span-2 space-y-8">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl md:text-2xl font-bold">Watchlist</h2>
+              <SearchCommand initialStocks={initialStocks} />
+            </div>
+
+            <WatchlistTable watchlist={watchlist} />
+          </div>
+        </section>
+
+        {/* Alerts – 1/3 */}
+        <section className="lg:col-span-1">
+          <AlertCard alertlist={alertlist} />
+        </section>
       </div>
     </section>
   );

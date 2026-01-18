@@ -90,6 +90,7 @@ export type QuoteData = {
 export type ProfileData = {
   name?: string;
   marketCapitalization?: number;
+  logo?: string;
 };
 
 export type FinancialsData = {
@@ -109,6 +110,21 @@ export type StockWithData = {
   changeFormatted?: string;
   marketCap?: string;
   peRatio?: string;
+  logo?: string;
+};
+
+export type AlertlistProps = {
+  alertlist: AlertWithData[];
+};
+
+export type AlertWithData = {
+  company: string;
+  symbol: string;
+  priceFormatted?: string;
+  changeFormatted?: string;
+  logo?: string;
+  option?: string;
+  targetPrice?: number;
 };
 
 export type WelcomeEmailData = {

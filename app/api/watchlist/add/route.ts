@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       .collection("users")
       .updateOne(
         { _id: new ObjectId(decoded.userId) },
-        { $addToSet: { favorites: symbol.toUpperCase() } }
+        { $addToSet: { favorites: symbol.toUpperCase() } },
       );
 
     // KEY: Revalidate all pages that might show watchlist data

@@ -27,7 +27,7 @@ const NEXT_PUBLIC_FINNHUB_API_KEY = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
 
 async function fetchJSON<T>(
   url: string,
-  revalidateSeconds?: number
+  revalidateSeconds?: number,
 ): Promise<T> {
   const options: RequestInit & { next?: { revalidate?: number } } =
     revalidateSeconds
@@ -45,7 +45,7 @@ async function fetchJSON<T>(
 export { fetchJSON };
 
 export async function getNews(
-  symbols?: string[]
+  symbols?: string[],
 ): Promise<MarketNewsArticle[]> {
   try {
     const range = getDateRange(5);
@@ -68,7 +68,7 @@ export async function getNews(
         cleanSymbols.map(async (sym) => {
           try {
             const url = `${FINNHUB_BASE_URL}/company-news?symbol=${encodeURIComponent(
-              sym
+              sym,
             )}&from=${range.from}&to=${range.to}&token=${token}`;
             const articles = await fetchJSON<RawNewsArticle[]>(url, 300);
             perSymbolArticles[sym] = (articles || []).filter(validateArticle);
@@ -76,7 +76,7 @@ export async function getNews(
             console.error("Error fetching company news  for", sym, err);
             perSymbolArticles[sym] = [];
           }
-        })
+        }),
       );
 
       const collected: MarketNewsArticle[] = [];
@@ -146,7 +146,7 @@ export const searchStocks = cache(
         // If no token, log and return empty to avoid throwing per requirements
         console.error(
           "Error in stock search:",
-          new Error("FINNHUB API key is not configured")
+          new Error("FINNHUB API key is not configured"),
         );
         return [];
       }
@@ -162,7 +162,7 @@ export const searchStocks = cache(
           top.map(async (sym) => {
             try {
               const url = `${FINNHUB_BASE_URL}/stock/profile2?symbol=${encodeURIComponent(
-                sym
+                sym,
               )}&token=${token}`;
               // Revalidate every hour
               const profile = await fetchJSON<any>(url, 3600);
@@ -171,7 +171,7 @@ export const searchStocks = cache(
               console.error("Error fetching profile2 for", sym, e);
               return { sym, profile: null } as { sym: string; profile: any };
             }
-          })
+          }),
         );
 
         results = profiles
@@ -196,7 +196,7 @@ export const searchStocks = cache(
           .filter((x): x is FinnhubSearchResult => Boolean(x));
       } else {
         const url = `${FINNHUB_BASE_URL}/search?q=${encodeURIComponent(
-          trimmed
+          trimmed,
         )}&token=${token}`;
         const data = await fetchJSON<FinnhubSearchResponse>(url, 1800);
         results = Array.isArray(data?.result) ? data.result : [];
@@ -229,7 +229,7 @@ export const searchStocks = cache(
       console.error("Error in stock search:", err);
       return [];
     }
-  }
+  },
 );
 
 export const getStocksDetails = cache(async (symbol: string) => {
@@ -238,17 +238,17 @@ export const getStocksDetails = cache(async (symbol: string) => {
     const [quote, profile, financials] = await Promise.all([
       fetchJSON(
         // Price data - no caching for accuracy
-        `${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`
+        `${FINNHUB_BASE_URL}/quote?symbol=${cleanSymbol}&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`,
       ),
       fetchJSON(
         // Company info - cache 1hr (rarely changes)
         `${FINNHUB_BASE_URL}/stock/profile2?symbol=${cleanSymbol}&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`,
-        3600
+        3600,
       ),
       fetchJSON(
         // Financial metrics (P/E, etc.) - cache 30min
         `${FINNHUB_BASE_URL}/stock/metric?symbol=${cleanSymbol}&metric=all&token=${NEXT_PUBLIC_FINNHUB_API_KEY}`,
-        3600
+        3600,
       ),
     ]);
 
@@ -276,6 +276,7 @@ export const getStocksDetails = cache(async (symbol: string) => {
       changeFormatted: formatChangePercent(changePercent),
       peRatio: peRatio?.toFixed(1) || "—",
       marketCapFormatted: formatMarketCapValue(marketCapFullUSD),
+      logo: profileData?.logo || undefined,
     };
   } catch (err) {}
 });

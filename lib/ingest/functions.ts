@@ -19,7 +19,7 @@ export const sendSignUpEmail = inngest.createFunction(
 
     const prompt = PERSONALIZED_WELCOME_EMAIL_PROMPT.replace(
       "{{userProfile}}",
-      userProfile
+      userProfile,
     );
 
     const response = await step.ai.infer("generate-welcome-intro", {
@@ -50,7 +50,7 @@ export const sendSignUpEmail = inngest.createFunction(
       success: true,
       message: "Welcome email sent successfully",
     };
-  }
+  },
 );
 
 export const sendDailyNewsSummary = inngest.createFunction(
@@ -90,7 +90,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
       try {
         const prompt = NEWS_SUMMARY_EMAIL_PROMPT.replace(
           "{{newsData}}",
-          JSON.stringify(articles, null, 2)
+          JSON.stringify(articles, null, 2),
         );
         const response = await step.ai.infer(`summarize-news-${user.email}`, {
           model: step.ai.models.gemini({ model: "gemini-3-flash-preview" }),
@@ -120,9 +120,9 @@ export const sendDailyNewsSummary = inngest.createFunction(
             date: formatDateToday,
             newsContent,
           });
-        })
+        }),
       );
     });
     return { succes: true, message: `Daily news summary send succesfully` };
-  }
+  },
 );
