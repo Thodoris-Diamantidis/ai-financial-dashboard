@@ -1,15 +1,27 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { deleteAlert } from "@/lib/actions/alertserver.actions";
 import { AlertlistProps } from "@/types/global";
 import { Edit2, Trash2 } from "lucide-react";
 
 export default function AlertCard({ alertlist }: AlertlistProps) {
   if (!alertlist || alertlist.length === 0) return <div>No alerts set</div>;
 
+  const handleDelete = async (alertId: string) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this alert?",
+    );
+    if (!confirmed) return;
+
+    await deleteAlert(alertId);
+  };
+
   return (
     <div className="flex flex-col gap-4 w-[350px] p-2">
       {alertlist.map((alert) => (
-        <Card key={`${alert.symbol}-${alert.targetPrice}`}>
+        <Card key={alert._id}>
           <CardHeader className="flex justify-between items-start gap-2">
             <div className="flex items-center gap-2">
               {alert.logo && (
@@ -35,7 +47,11 @@ export default function AlertCard({ alertlist }: AlertlistProps) {
               <Button variant="ghost" size="icon">
                 <Edit2 size={16} />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleDelete(alert._id)}
+              >
                 <Trash2 size={16} />
               </Button>
             </div>

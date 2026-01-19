@@ -59,7 +59,7 @@ export const sendSignUpEmail = inngest.createFunction(
 
 export const sendDailyNewsSummary = inngest.createFunction(
   { id: "daily-news" },
-  [{ event: "app/send.daily.news" }, { cron: "* 12 * * *" }],
+  [{ event: "app/send.daily.news" }, { cron: "0 12 * * *" }],
   async ({ step }) => {
     //Step #1: Get all users for news delivery
     const users = await step.run("get-all-users", getAllUsersForNewsEmail);
@@ -133,7 +133,7 @@ export const sendDailyNewsSummary = inngest.createFunction(
 
 export const sendPriceAlerts = inngest.createFunction(
   { id: "price-alerts" },
-  [{ event: "app/send.price-alerts" }, { cron: "* 12 * * * " }],
+  [{ event: "app/send.price-alerts" }, { cron: "0 12 * * * " }],
   async ({ step }) => {
     // Step #1: Get all users
     //We use the same method for newsEmail because it returns all we need

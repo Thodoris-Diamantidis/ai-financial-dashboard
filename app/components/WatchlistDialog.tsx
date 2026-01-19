@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface WatchlistDialogProps {
   symbol: string;
@@ -67,12 +70,12 @@ export default function WatchlistDialog({
 
       if (!res.ok) throw new Error("Failed to save alert");
 
-      alert("Alert saved");
+      toast.success("Alert added succesfully");
       router.refresh();
       setOpen(false); //close dialog
     } catch (err) {
       console.error(err);
-      alert("Error saving alert");
+      toast.error("Error saving alert");
     }
   };
 

@@ -118,6 +118,7 @@ export type AlertlistProps = {
 };
 
 export type AlertWithData = {
+  _id: string;
   company: string;
   symbol: string;
   priceFormatted?: string;

@@ -62,6 +62,7 @@ export const getWatchlistWithData = async () => {
 };
 
 type Alert = {
+  _id: string;
   symbol: string;
   company: string;
   priceFormatted: string;
@@ -76,16 +77,27 @@ export const getAlertsWithData = async () => {
   try {
     const user = await getCurrentUserFromServer();
 
-    const alertlist: Alert[] = user?.alerts;
+    const alertlist = (user?.alerts || []).map((alert: any) => ({
+      _id: alert._id.toString(), // ✅ CRITICAL FIX
+      symbol: alert.symbol,
+      company: alert.company,
+      priceFormatted: alert.priceFormatted,
+      changeFormatted: alert.changeFormatted,
+      logo: alert.logo,
+      option: alert.option,
+      targetPrice: alert.targetPrice,
+      createdAt: alert.createdAt?.toISOString?.() ?? null,
+    }));
     if (alertlist.length === 0) return [];
 
     const stocksWithData = await Promise.all(
-      alertlist.map(async (alert) => {
+      alertlist.map(async (alert: Alert) => {
         const stockData = await getStocksDetails(alert.symbol);
 
         if (!stockData) {
           console.warn(`Failed to fetch data for ${alert.symbol}`);
           return {
+            _id: "",
             company: "Unknown Company",
             symbol: alert.symbol,
             priceFormatted: "—",
@@ -96,6 +108,7 @@ export const getAlertsWithData = async () => {
           }; // fallback object
         }
         return {
+          _id: alert._id,
           company: stockData.company,
           symbol: stockData.symbol,
           priceFormatted: stockData.priceFormatted,

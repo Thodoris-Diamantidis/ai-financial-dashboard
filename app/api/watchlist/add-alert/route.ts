@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       .updateOne({ _id: new ObjectId(decoded.userId) }, {
         $push: {
           alerts: {
+            _id: new ObjectId(),
             symbol: symbol.toUpperCase(),
             company,
             priceFormatted,
