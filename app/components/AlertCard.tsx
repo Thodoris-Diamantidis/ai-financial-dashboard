@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { deleteAlert } from "@/lib/actions/alertserver.actions";
 import { AlertlistProps } from "@/types/global";
 import { Edit2, Trash2 } from "lucide-react";
+import WatchlistDialog from "./WatchlistDialog";
 
 export default function AlertCard({ alertlist }: AlertlistProps) {
   if (!alertlist || alertlist.length === 0) return <div>No alerts set</div>;
@@ -44,9 +45,19 @@ export default function AlertCard({ alertlist }: AlertlistProps) {
             </div>
 
             <div className="flex gap-1">
-              <Button variant="ghost" size="icon">
-                <Edit2 size={16} />
-              </Button>
+              <WatchlistDialog
+                symbol={alert.symbol}
+                company={alert.company}
+                priceFormatted={alert.priceFormatted ?? ""}
+                changeFormatted={alert.changeFormatted ?? ""}
+                logo={alert.logo ?? ""}
+                alertToEdit={{
+                  _id: alert._id,
+                  option: alert.option ?? "eq", // default to "eq" if undefined
+                  targetPrice: alert.targetPrice ?? 0, // default to 0 if undefined
+                }}
+              />
+
               <Button
                 variant="ghost"
                 size="icon"

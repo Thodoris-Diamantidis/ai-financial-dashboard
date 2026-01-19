@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface WatchlistDialogProps {
@@ -32,18 +32,33 @@ interface WatchlistDialogProps {
   priceFormatted: string;
   changeFormatted: string;
   logo: string;
+  alertToEdit?: {
+    _id: string;
+    option: "eq" | "lt" | "gt";
+    targetPrice: number;
+  };
 }
+
 export default function WatchlistDialog({
   symbol,
   company,
   priceFormatted,
   changeFormatted,
   logo,
+  alertToEdit,
 }: WatchlistDialogProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [option, setOption] = useState<"eq" | "lt" | "gt">("eq");
   const [targetPrice, setTargetPrice] = useState<number | "">("");
+
+  // Prefill the modal if editing
+  useEffect(() => {
+    if (alertToEdit) {
+      setOption(alertToEdit.option);
+      setTargetPrice(alertToEdit.targetPrice);
+    }
+  }, [alertToEdit]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,28 +69,44 @@ export default function WatchlistDialog({
 
     //Call API route to save alert
     try {
-      const res = await fetch("api/watchlist/add-alert", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          symbol,
-          company,
-          priceFormatted,
-          changeFormatted,
-          logo,
-          option,
-          targetPrice,
-        }),
-      });
+      const body = {
+        symbol,
+        company,
+        priceFormatted,
+        changeFormatted,
+        logo,
+        option,
+        targetPrice,
+      };
 
-      if (!res.ok) throw new Error("Failed to save alert");
+      if (alertToEdit) {
+        // EDIT mode
+        const res = await fetch(
+          `/api/watchlist/update-alert/${alertToEdit._id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          },
+        );
+        if (!res.ok) throw new Error("Failed to update alert");
+        toast.success("Alert updated successfully");
+      } else {
+        // ADD mode
+        const res = await fetch("/api/watchlist/add-alert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) throw new Error("Failed to save alert");
+        toast.success("Alert added successfully");
+      }
 
-      toast.success("Alert added succesfully");
       router.refresh();
-      setOpen(false); //close dialog
+      setOpen(false);
     } catch (err) {
       console.error(err);
-      toast.error("Error saving alert");
+      toast.error(alertToEdit ? "Error updating alert" : "Error saving alert");
     }
   };
 
@@ -85,24 +116,32 @@ export default function WatchlistDialog({
       onOpenChange={(isOpen) => {
         setOpen(isOpen);
 
-        // Reset form when dialog closes
-        if (!isOpen) {
-          setOption("eq"); // default option
-          setTargetPrice(""); // clear price input
+        if (!isOpen && !alertToEdit) {
+          // reset form only when not editing
+          setOption("eq");
+          setTargetPrice("");
         }
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">Add Alert</Button>
+        <Button variant="outline">
+          {alertToEdit ? "Edit Alert" : "Add Alert"}
+        </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit Alert</DialogTitle>
+            <DialogTitle>
+              {alertToEdit ? "Edit Alert" : "Add Alert"}
+            </DialogTitle>
             <DialogDescription>
-              Make changes to your alert.Click save when you&apos;re done
+              {alertToEdit
+                ? "Make changes to your alert. Click save when you're done."
+                : "Create a new alert. Click save when you're done."}
             </DialogDescription>
           </DialogHeader>
+
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="options">Option</Label>
@@ -124,6 +163,7 @@ export default function WatchlistDialog({
                 </SelectContent>
               </Select>
             </div>
+
             <div className="grid gap-3">
               <Label htmlFor="price">Price</Label>
               <Input
@@ -136,11 +176,14 @@ export default function WatchlistDialog({
               />
             </div>
           </div>
+
           <DialogFooter className="mt-5">
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">
+              {alertToEdit ? "Save Changes" : "Save Alert"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

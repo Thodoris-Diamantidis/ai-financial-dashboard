@@ -124,7 +124,7 @@ export type AlertWithData = {
   priceFormatted?: string;
   changeFormatted?: string;
   logo?: string;
-  option?: string;
+  option?: "eq" | "lt" | "gt";
   targetPrice?: number;
 };
 
