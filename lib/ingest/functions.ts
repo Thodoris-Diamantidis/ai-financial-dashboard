@@ -7,12 +7,14 @@ import {
 } from "../nodemailer";
 import { inngest } from "./client";
 import {
+  FAVORITE_STOCKS_AI_PROMPT,
   NEWS_SUMMARY_EMAIL_PROMPT,
   PERSONALIZED_WELCOME_EMAIL_PROMPT,
 } from "./prompts";
 import { getWatchlistSymbolByEmail } from "../actions/watchlistserver.actions";
 import { getNews, getStocksDetails } from "../actions/finnhub.actions";
 import { formatDateToday } from "../utils";
+import clientPromise from "../mongodb";
 
 export const sendSignUpEmail = inngest.createFunction(
   { id: "sing-up" },
@@ -145,10 +147,10 @@ export const sendPriceAlerts = inngest.createFunction(
     for (const user of users) {
       const alerts = user.alerts || [];
       //step for testing purposes
-      await step.run(`log-alerts-${user.email}`, async () => {
-        console.log("User:", user.email);
-        console.log("Alerts:", user.alerts);
-      });
+      // await step.run(`log-alerts-${user.email}`, async () => {
+      //   console.log("User:", user.email);
+      //   console.log("Alerts:", user.alerts);
+      // });
       if (!alerts.length) continue;
 
       // Collect triggered alerts for this user
@@ -220,5 +222,96 @@ export const sendPriceAlerts = inngest.createFunction(
       }
     }
     return { success: true, message: "Price alerts processed" };
+  },
+);
+
+export const favoriteStocksAI = inngest.createFunction(
+  { id: "ai-stock-analysis" },
+  { event: "ai/favorite-stock-analysis" },
+  async ({ event, step }) => {
+    const { userId, questionType, symbol } = event.data;
+
+    // Step 1# Basic validation
+    if (!userId || !questionType || !symbol) {
+      throw new Error("Invalid event payload");
+    }
+    // Step 1.5# log received question for debug
+    await step.run("log-input", async () => {
+      console.log("AI stock analysis triggered:", {
+        userId,
+        questionType,
+        symbol,
+      });
+    });
+    //step 2#  since the event trigger is gonna happen from the UI,
+    // the questions are gonna come from a select box with 2-3opitons and then a panel to choose from which STOCK after that
+    //  fetch details about the stock(does finnhub have a endpoint to get price data for a whole month thats what i want?)
+    const stockData = await step.run("fetch-stock-data", async () => {
+      const now = new Date();
+      const from = new Date();
+      from.setDate(now.getDate() - 30);
+
+      const fromStr = from.toISOString().split("T")[0];
+      const toStr = now.toISOString().split("T")[0];
+
+      const res = await fetch(
+        `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${fromStr}/${toStr}?adjusted=true&sort=asc&limit=30&apiKey=${process.env.POLYGON_API_KEY}`,
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Polygon error: ${text}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.results || data.results.length === 0) {
+        throw new Error("No price data returned from Polygon");
+      }
+
+      return data.results.map((d: any) => ({
+        date: new Date(d.t).toISOString().split("T")[0],
+        open: d.o,
+        high: d.h,
+        low: d.l,
+        close: d.c,
+        volume: d.v,
+      }));
+    });
+    //step 3# with the question and the fetched data ask ai to generate a respone
+    let aiResponse = "";
+    try {
+      const prompt = FAVORITE_STOCKS_AI_PROMPT.replace(
+        "{{question}}",
+        questionType,
+      )
+        .replace("{{stockData}}", JSON.stringify(stockData, null, 2))
+        .replace("{{symbol}}", symbol);
+      const response = await step.ai.infer("Ai-answer", {
+        model: step.ai.models.gemini({ model: "gemini-3-flash-preview" }),
+        body: {
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+        },
+      });
+
+      const part = response.candidates?.[0]?.content?.parts?.[0];
+      aiResponse = (part && "text" in part ? part.text : null) || "No idea";
+    } catch (err) {
+      console.error("Failed to get an answer", err);
+    }
+
+    //save to db
+    const client = await clientPromise;
+    const db = client.db("ai_finance");
+    await db.collection("ai_runs").insertOne({
+      userId,
+      symbol,
+      questionType,
+      result: aiResponse,
+      status: "completed",
+      createdAt: new Date(),
+    });
+
+    return { success: true };
   },
 );

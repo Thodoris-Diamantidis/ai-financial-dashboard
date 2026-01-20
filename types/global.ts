@@ -102,6 +102,7 @@ export type WatchlistTableProps = {
 };
 
 export type StockWithData = {
+  userId?: string;
   symbol: string;
   company: string;
   currentPrice?: number;

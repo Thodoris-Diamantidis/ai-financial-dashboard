@@ -4,6 +4,18 @@ import SearchCommand from "../components/SearchCommand";
 import { getAlertsWithData, getWatchlistWithData } from "@/lib/user";
 import { WatchlistTable } from "../components/WatchlistTable";
 import AlertCard from "../components/AlertCard";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AI_QUESTIONS } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
+import AskAI from "../components/AskAI";
 
 const Watchlist = async () => {
   const watchlist = await getWatchlistWithData();
@@ -38,6 +50,10 @@ const Watchlist = async () => {
             </div>
 
             <WatchlistTable watchlist={watchlist} />
+          </div>
+          <div className="flex items-center justify-center">
+            <span className="mr-5">Ask AI:</span>
+            <AskAI watchlist={watchlist} />
           </div>
         </section>
 

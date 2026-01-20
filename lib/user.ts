@@ -42,6 +42,7 @@ export const getWatchlistWithData = async () => {
           }; // fallback object
         }
         return {
+          userId: user?._id.toString(),
           company: stockData.company,
           symbol: stockData.symbol,
           currentPrice: stockData.currentPrice,

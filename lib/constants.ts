@@ -251,3 +251,20 @@ export const WATCHLIST_TABLE_HEADER = [
   "Alert",
   "Action",
 ];
+
+export const AI_QUESTIONS = [
+  {
+    title: "LONG_TERM_OUTLOOK",
+    description:
+      "Analyze the long-term outlook of this stock based on recent price data.",
+  },
+  {
+    title: "RISK_ANALYSIS",
+    description:
+      "Analyze the risk of this stock based on volatility and recent trends.",
+  },
+  {
+    title: "RECENT_TREND",
+    description: "Summarize the stock's price trend over the last month.",
+  },
+];

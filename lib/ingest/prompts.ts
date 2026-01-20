@@ -197,3 +197,36 @@ Apple Stock Jumped After Great Earnings Report
 <a href="https://example.com/article2" style="color: #FDD458; text-decoration: none; font-weight: 500; font-size: 14px;" target="_blank" rel="noopener noreferrer">Read Full Story →</a>
 </div>
 </div>`;
+
+export const FAVORITE_STOCKS_AI_PROMPT = `
+You are a financial AI assistant. Your task is to answer a user's question about a specific stock using historical price data.
+
+User question: {{question}}
+
+Stock Symbol : {{symbol}}
+
+Stock data (past 30 days):
+{{stockData}}
+
+GUIDELINES FOR RESPONSE:
+1. Provide clear, concise insights tailored to the user's question.
+2. Reference the stock symbol directly and any trends in the data (e.g., rising, falling, volatility).
+3. Highlight key numbers: percentage changes, highs/lows, or volume spikes where relevant.
+4. Offer actionable context: what the trend might imply for a typical investor.
+5. Keep your response conversational, accessible, and easy to understand — assume the user is not a professional trader.
+6. If the question involves comparisons (e.g., "is it a good time to buy?"), reference recent trends in the stock data to support your answer.
+7. Return your response in plain text only — do NOT include markdown, code blocks, or HTML.
+8. Make the response between 3-5 sentences, giving a clear answer and reasoning.
+
+Example:
+User question: "Is it a good time to invest in AAPL?"
+Stock data:
+[
+  { date: "2026-01-01", open: 130, high: 135, low: 128, close: 134, volume: 1000000 },
+  { date: "2026-01-02", open: 134, high: 136, low: 132, close: 133, volume: 1100000 },
+  ...
+]
+
+AI response:
+"AAPL has shown modest gains over the past month, with a slight upward trend overall. The stock peaked at 136 and closed recently at 133, indicating minor volatility. Trading volume has been consistent, suggesting steady investor interest. If you are aiming for medium-term growth, this could be a reasonable entry point, but short-term traders should watch for fluctuations."
+`;

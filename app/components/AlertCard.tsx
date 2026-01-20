@@ -6,16 +6,22 @@ import { deleteAlert } from "@/lib/actions/alertserver.actions";
 import { AlertlistProps } from "@/types/global";
 import { Edit2, Trash2 } from "lucide-react";
 import WatchlistDialog from "./WatchlistDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function AlertCard({ alertlist }: AlertlistProps) {
   if (!alertlist || alertlist.length === 0) return <div>No alerts set</div>;
 
   const handleDelete = async (alertId: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this alert?",
-    );
-    if (!confirmed) return;
-
     await deleteAlert(alertId);
   };
 
@@ -57,14 +63,30 @@ export default function AlertCard({ alertlist }: AlertlistProps) {
                   targetPrice: alert.targetPrice ?? 0, // default to 0 if undefined
                 }}
               />
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleDelete(alert._id)}
-              >
-                <Trash2 size={16} />
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Trash2 size={16} />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(alert._id)}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </CardHeader>
           <CardContent className="text-sm flex flex-col gap-1">
