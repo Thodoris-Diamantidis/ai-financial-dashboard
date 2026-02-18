@@ -1,5 +1,5 @@
+"use client";
 export const dynamic = "force-dynamic";
-("use client");
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/lib/UserContext";
 import { DrawerDialog } from "../components/DrawerDialog";
