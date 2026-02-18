@@ -12,8 +12,12 @@ import {
 } from "@/lib/constants";
 import { getUserWatchlist } from "@/lib/user";
 import { StockDetailsPageProps } from "@/types/global";
+import { getCurrentUserFromServer } from "@/lib/auth";
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
+  const user = await getCurrentUserFromServer();
+  const isLoggedIn = !!user;
+
   const { symbol } = await params;
   const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
@@ -50,13 +54,15 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
         {/* Right column */}
         <div className="flex flex-col gap-6 mt-6">
           <div className="flex items-center justify-between">
-            <WatchlistButton
-              symbol={symbol.toUpperCase()}
-              company={stockData?.company || symbol.toUpperCase()}
-              isInWatchlist={isInWatchlist}
-              type="button"
-              showTrashIcon={true}
-            />
+            {isLoggedIn && (
+              <WatchlistButton
+                symbol={symbol.toUpperCase()}
+                company={stockData?.company || symbol.toUpperCase()}
+                isInWatchlist={isInWatchlist}
+                type="button"
+                showTrashIcon={true}
+              />
+            )}
           </div>
 
           <TradingViewWidget

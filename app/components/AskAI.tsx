@@ -27,7 +27,7 @@ export default function AskAI({ watchlist }: WatchlistTableProps) {
     setLoading(true);
     setAnswer(null);
 
-    await fetch("api/watchlist/favorite-stock-analysis", {
+    await fetch("/api/watchlist/favorite-stock-analysis", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -91,7 +91,7 @@ export default function AskAI({ watchlist }: WatchlistTableProps) {
         </Button>
         <div className="mt-4 p-4 border rounded">
           {loading && !answer && <p>Thinking...</p>}
-          {(answer && <p>{answer}</p>) || "No more api credits"}
+          {answer && <p>{answer}</p>}
         </div>
       </div>
     </div>
